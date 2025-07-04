@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from "@repo/backend-common/config";
 import { CreateUserSchema, SigninSchema, CreateRoomSchema } from "@repo/common/types";
 import { prismaClient } from "@repo/db/client";
+import { middleware } from "./middleware";
 
 const app = express();
 app.use(express.json());
@@ -73,7 +74,7 @@ app.post("/signin", async (req, res) => {
 
 })
 
-app.post("/room", async (req, res) => {
+app.post("/room", middleware, async (req, res) => {
   const parsedData = CreateRoomSchema.safeParse(req.body);
   if(!parsedData.success) {
     res.json({
